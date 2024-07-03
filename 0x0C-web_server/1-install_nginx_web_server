@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Transfers a file from our client to a server.
+
+sudo apt-get update
+sudo apt-get install nginx
+sudo service nginx start
+sudo touch /var/www/html/index.html
+echo "Hello World!" | sudo tee /var/www/html/index.html
+sudo service nginx restart

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Custom not found page 404
+
+sudo apt-get update
+sudo apt-get install nginx
+sudo service nginx start
+sudo touch /var/www/html/index.html
+echo "Hello World!" | sudo tee /var/www/html/index.html
+sudo sed -i '/^}$/i \ \n\trewrite ^/redirect_me$ https:\/\/www.youtube.com\/watch?v=QH2-TGUlwu4 permanent;' /etc/nginx/sites-available/default
+sudo touch /var/www/html/404_error.html
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/404_error.html
+sudo sed -i '/^}$/i \ n\terror_page 404 /404_error.html;\n\n\tlocation /404_error.html {\n\t\tinternal;\n\t}' /etc/nginx/sites-available/default
+sudo nginx -t
+sudo service nginx restart
