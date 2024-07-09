@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Configures a brand new Ubuntu machine to the requirements.
+apt-get update
+apt-get install -y nginx
+
+mkdir /etc/nginx/html
+touch /etc/nginx/html.index.html
+echo "Welcome to ALX" > /etc/nginx/html.index.html
+touch /etc/nginx/html/error_404.html
+
+print %s "server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+	add_header X-Served-By $HOSTNAME;
+	root /var/www/html;
+	index index.html;
+	location /redirect_me {
+		return 301 https://www.youtube.com/;
+	}
+
+	error_page 404 /error_404.html;
+	location /error_404 {
+		root /etc/nginx/html;
+		internal;
+	}
+}" > /etc/nginx/sites-available/default
+
+service nginx restart
