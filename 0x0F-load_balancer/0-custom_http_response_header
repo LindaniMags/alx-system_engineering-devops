@@ -1,28 +1,9 @@
 #!/usr/bin/env bash
 # Configures a brand new Ubuntu machine to the requirements.
-apt-get update
-apt-get install -y nginx
-
-mkdir /etc/nginx/html
-touch /etc/nginx/html.index.html
-echo "Welcome to ALX" > /etc/nginx/html.index.html
-touch /etc/nginx/html/error_404.html
-
-print %s "server {
-	listen 80 default_server;
-	listen [::]:80 default_server;
-	add_header X-Served-By $HOSTNAME;
-	root /var/www/html;
-	index index.html;
-	location /redirect_me {
-		return 301 https://www.youtube.com/;
-	}
-
-	error_page 404 /error_404.html;
-	location /error_404 {
-		root /etc/nginx/html;
-		internal;
-	}
-}" > /etc/nginx/sites-available/default
-
-service nginx restart
+apt-get -y update
+apt-get -y install nginx
+echo "Hello World!" > /var/www/html/index.nginx-debian.html
+echo "Ceci n'est pas une page" > /usr/share/nginx/html/error_404.html
+sed -i "s/server_name _;/server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/LindaniMags permanent;\n\n\terror_page 404 \/error_404.html;\n\tlocation = \/error_404.html {\n\t\troot \/usr\/share\/nginx\/html;\n\t\tinternal;\n\t}/" /etc/nginx/sites-available/default
+sed -i "s/include \/etc\/nginx\/sites-enabled\/\*;/include \/etc\/nginx\/sites-enabled\/\*;\n\tadd_header X-Served-By \"$HOSTNAME\";/" /etc/nginx/nginx.conf
+service nginx start
